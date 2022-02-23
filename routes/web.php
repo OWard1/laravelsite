@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/contact', '\App\Http\Controllers\PostsController@contact');
 
-Route::get('/post/{id}', '\App\Http\Controllers\PostsController@show_post');
+Route::get('/post/{id}/{name}/{password}', '\App\Http\Controllers\PostsController@show_post');
 
 //Route::get('/', function () {
 //    return view('welcome');
