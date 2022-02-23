@@ -86,9 +86,13 @@ class PostsController extends Controller
     }
     public function contact(){
 
-        return view('pages.contact');
+        return view('contact');
     }
 
+    public function show_post(){
+
+        return view('post');
+    }
 }
 
 //  Route::get('/checking', '\App\Http\Controllers\HomeController@index');
