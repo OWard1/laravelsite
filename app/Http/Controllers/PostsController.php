@@ -82,3 +82,7 @@ class PostsController extends Controller
         //
     }
 }
+
+//  Route::get('/checking', '\App\Http\Controllers\HomeController@index');
+// instead of
+// Route::get('/', 'HomeController@index')
