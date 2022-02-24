@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <title>Laravel</title>
+@extends('layouts.app')
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-<div class ="container">
-    <h1> Post {{$id}} {{$name}} {{$password}}</h1>
-</div>
-</body>
-</html>
+
+
+@section('content')
+
+    <h1> Post Page {{$id}} {{$name}} {{$password}} </h1>
+
+@stop
+
+@section('footer')
+
+    <script> alert('Hello visitor') </script>
+@stop
