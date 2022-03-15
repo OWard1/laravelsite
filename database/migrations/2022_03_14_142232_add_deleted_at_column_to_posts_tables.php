@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id')->unsigned();
-            $table->string('title')->nullable();
-            $table->text('body');
-            $table->timestamps();
+        Schema::table('posts', function (Blueprint $table) {
+            //
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::table('posts', function (Blueprint $table) {
+            //
+            $table->dropColumn('deleted_at');
+        });
     }
 };

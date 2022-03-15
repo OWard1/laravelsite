@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Post;
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,7 +32,10 @@ Route::get('/update', function(){
 
 Route::get('/insert', function() {
 
-    DB::insert('insert into posts(title, body) values(?, ?)', ['PHP with Laravel', 'Laravel is awesome']);
+    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Laravel is the best', 'Laravel is awesome, PERIOD', 1]);
+    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Java is the best', 'Java is awesome, PERIOD', 1]);
+    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Python is the best', 'Python is awesome, PERIOD', 1]);
+    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Javascript is the best', 'Javascript is awesome, PERIOD', 1]);
 
 });
 
@@ -51,6 +55,119 @@ Route::get('/delete', function(){
 
     return $deleted;
 });
+/*
+|----------------------------------------------------------------------------------------
+| ELOQUENT
+|----------------------------------------------------------------------------------------
+*/
+
+Route::get('/findwhere', function(){
+
+    $posts = Post::where('id', 3)->orderBy('id', 'desc')->take(1)->get();
+
+    return $posts;
+
+});
+
+Route::get('/findmore', function(){
+//
+//    $posts = Post::findOrFail(2);
+//
+//    return $posts;
+
+    $posts = Post::where('users_count', '<', 50)->firstOrFail();
+    return $posts;
+});
+
+Route::get('/basicinsert', function(){
+    $post = Post::find(3);
+
+    $post->title = 'New Eloquent title insert';
+    $post->body = 'Wow eloquent is really cool, look at this content';
+    $post -> save();
+});
+
+Route::get('/create', function(){
+
+    Post::create(['title'=>'the create method 12', 'body'=> 'wow im learning with edwin 12']);
+
+});
+
+Route::get('/update', function () {
+
+    Post::where('id', 2)->where('is_admin', 0)->update(['title'=>'New PHP Title', 'body'=>'Edwin is a G']);
+});
+
+Route::get('/delete', function(){
+
+    $post = Post::find(4);
+
+    $post->delete();
+
+});
+
+Route::get('/delete2', function(){
+
+    Post::destroy(3);
+
+});
+
+Route::get('/delete3', function(){
+
+    Post::destroy([4,6]);
+
+    Post::where('is_admin',0 )->delete();
+
+});
+
+Route::get('/softdelete', function(){
+
+    Post::find(3)->delete();
+
+});
+
+Route::get('/readsoftdelete', function (){
+
+    $post = Post::onlyTrashed()->where('is_admin', 0)->get();
+
+    return $post;
+});
+
+Route::get('/restore', function(){
+
+    Post::withTrashed()->where('is_admin', 0)->restore();
+
+});
+
+Route::get('/forcedelete', function(){
+
+    Post::onlyTrashed()->where('is_admin', 0)-> forceDelete();
+
+});
+
+/*
+|----------------------------------------------------------------------------------------
+| ELOQUENT Relationships
+|----------------------------------------------------------------------------------------
+*/
+
+Route::get('/user/{id}/post', function($id){
+
+    return User::find($id)->post->body;
+
+});
+//
+//Route::get('/find', function(){
+//
+//    $post = Post::find(2);
+//
+//    return $post ->title;
+//
+//});
+//
+//    foreach($posts as $post){
+//        return $post -> title;
+//    }
 
 //Route::get('/', function () {
 //    return view('welcome');
