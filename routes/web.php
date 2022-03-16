@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Country;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,6 +37,12 @@ Route::get('/insert', function() {
     DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Java is the best', 'Java is awesome, PERIOD', 1]);
     DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Python is the best', 'Python is awesome, PERIOD', 1]);
     DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Javascript is the best', 'Javascript is awesome, PERIOD', 1]);
+    DB::insert('insert into users(name, email, password) values(?, ?, ?)', ['Oli', 'Oli@thing.com', 'password']);
+    DB::insert('insert into users(name, email, password) values(?, ?, ?)', ['Peter', 'Peter@thing.com', 'password']);
+    DB::insert('insert into roles (name) values(?)', ['admin']);
+    DB::insert('insert into roles (name) values(?)', ['subscriber']);
+    DB::insert('insert into role_user (user_id, role_id) values(?, ?)', [1, 1]);
+    DB::insert('insert into role_user (user_id, role_id) values(?, ?)', [2, 2]);
 
 });
 
@@ -150,12 +157,73 @@ Route::get('/forcedelete', function(){
 | ELOQUENT Relationships
 |----------------------------------------------------------------------------------------
 */
-
+// One to one relationship
 Route::get('/user/{id}/post', function($id){
 
     return User::find($id)->post->body;
 
 });
+
+Route::get('post/{id}/user', function($id){
+
+    Return Post::find($id)->user->name;
+
+});
+
+// One to many reltionship
+Route::get('/posts', function(){
+
+    $user = User::find(1);
+
+    foreach($user->posts as $post){
+        echo $post->title . "<br>";
+    }
+
+});
+
+// many to many
+
+Route::get('user/{id}/role', function($id) {
+
+    $user = User::find($id)->roles()->orderBy('id', 'desc')->get();
+
+    return $user;
+
+});
+
+
+ // Accessing the intermediate table /pivot
+
+
+Route::get('user/pivot', function(){
+
+    $user = User::find(2);
+
+    foreach($user->roles as $role){
+
+        echo $role->pivot->created_at;
+
+    }
+
+});
+
+Route::get('user/country', function(){
+
+        $country = Country::find(2);
+
+        foreach($country->posts as $post)
+        {
+            return $post->title;
+        }
+
+});
+
+//    foreach($user->roles as $role) {
+//
+//     return $role->name;
+//
+// }
+
 //
 //Route::get('/find', function(){
 //
