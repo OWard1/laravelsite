@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\Photo;
+use App\Models\Tag;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,16 +35,26 @@ Route::get('/update', function(){
 
 Route::get('/insert', function() {
 
-    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Laravel is the best', 'Laravel is awesome, PERIOD', 1]);
-    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Java is the best', 'Java is awesome, PERIOD', 1]);
+    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['PHP is the best', 'Laravel is awesome, PERIOD', 1]);
+    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Javascript is the best', 'Java is awesome, PERIOD', 1]);
     DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Python is the best', 'Python is awesome, PERIOD', 1]);
-    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Javascript is the best', 'Javascript is awesome, PERIOD', 1]);
+    DB::insert('insert into posts(title, body, user_id) values(?, ?, ?)', ['Java is the best', 'Javascript is awesome, PERIOD', 1]);
     DB::insert('insert into users(name, email, password) values(?, ?, ?)', ['Oli', 'Oli@thing.com', 'password']);
     DB::insert('insert into users(name, email, password) values(?, ?, ?)', ['Peter', 'Peter@thing.com', 'password']);
     DB::insert('insert into roles (name) values(?)', ['admin']);
     DB::insert('insert into roles (name) values(?)', ['subscriber']);
     DB::insert('insert into role_user (user_id, role_id) values(?, ?)', [1, 1]);
     DB::insert('insert into role_user (user_id, role_id) values(?, ?)', [2, 2]);
+    DB::insert('insert into countries (name) values(?)', ["UK"]);
+    DB::insert('insert into countries (name) values(?)', ["GR"]);
+    DB::insert('insert into photos (path, imageable_id, imageable_type) values(?, ?, ?)', ["me.jpg", 1, "App\Models\User"]);
+    DB::insert('insert into photos (path, imageable_id, imageable_type) values(?, ?, ?)', ["notme.jpg", 2, "App\Models\Post"]);
+    DB::insert('insert into videos (name) values(?)', ["oli.mov"]);
+    DB::insert('insert into videos (name) values(?)', ["new.mov"]);
+    DB::insert('insert into taggables (tag_id, taggable_id, taggable_type) values(?, ?, ?)', [1, 1, "App\Models\Video"]);
+    DB::insert('insert into taggables (tag_id, taggable_id, taggable_type) values(?, ?, ?)', [2, 2, "App\Models\Post"]);
+    DB::insert('insert into tags (name) values(?)', ["PHP"]);
+    DB::insert('insert into tags (name) values(?)', ["Javascript"]);
 
 });
 
@@ -215,6 +227,48 @@ Route::get('user/country', function(){
         {
             return $post->title;
         }
+
+});
+
+
+// Polymorphic relationship
+
+Route::get('post/{id}/photos', function($id) {
+    $user = Post::find($id);
+
+    foreach ($user->photos as $photo) {
+        echo $photo->path . "<br>";
+    }
+});
+
+Route::get('photo/{id}/post', function($id){
+
+    $photo = Photo::findOrFail($id);
+
+    return $photo->imageable;
+
+});
+
+
+// Polymorphic many to many relationship
+
+Route::get('/post/tag', function(){
+
+    $post = Post::find(1);
+
+    foreach($post->tags as $tag){
+        echo $tag->name;
+    }
+
+});
+
+Route::get('/tag/post', function(){
+
+    $tag = Tag::find(2);
+
+    foreach($tag->posts as $post){
+        echo $post->title;
+    }
 
 });
 

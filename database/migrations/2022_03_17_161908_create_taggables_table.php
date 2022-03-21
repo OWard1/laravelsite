@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('role_user', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id')->nullable();;
-            $table->integer('role_id');
-            $table->timestamps();
+        Schema::create('taggables', function (Blueprint $table) {
+            $table->integer('tag_id');
+            $table->integer('taggable_id');
+            $table->string('taggable_type');
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('taggables');
     }
 };

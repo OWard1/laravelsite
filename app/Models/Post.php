@@ -22,6 +22,17 @@ class Post extends Model
 
     }
 
+    public function photos()
+    {
+        return $this->morphMany('App\Models\Photo', 'imageable');
+    }
+
+    public function tags(){
+
+        return $this->morphToMany('App\Models\Tag', 'taggable');
+
+    }
+
 //
 //    protected $table = 'posts';
 //
